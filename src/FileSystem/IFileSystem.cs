@@ -1,20 +1,21 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace FileSystem
 {
-  public interface IFileSystem
+	public interface IFileSystem
 	{
-		bool FileExists(string path);
-		void WriteFile(string path, Stream contents);
-		Stream ReadFile(string path);
-		void DeleteFile(string path);
-		void CopyFile(string source, string destination);
+		Task<bool> FileExists(string path);
+		Task WriteFile(string path, Stream contents);
+		Task<Stream> ReadFile(string path);
+		Task DeleteFile(string path);
+		Task CopyFile(string source, string destination);
 
 		bool DirectoryExists(string path);
-		void CreateDirectory(string path);
-		IEnumerable<string> ListFiles(string path);
-		IEnumerable<string> ListDirectories(string path);
-		void DeleteDirectory(string path);
+		Task CreateDirectory(string path);
+		Task<IEnumerable<string>> ListFiles(string path);
+		Task<IEnumerable<string>> ListDirectories(string path);
+		Task DeleteDirectory(string path);
 	}
 }
