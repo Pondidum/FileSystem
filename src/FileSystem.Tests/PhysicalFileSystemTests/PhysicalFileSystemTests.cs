@@ -22,6 +22,12 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			return new MemoryStream(Encoding.UTF8.GetBytes(text));
 		}
 
+		protected string StringFrom(Stream stream)
+		{
+			using (var sr = new StreamReader(stream))
+				return sr.ReadToEnd();
+		}
+
 		public virtual void Dispose()
 		{
 			try
