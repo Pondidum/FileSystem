@@ -6,9 +6,9 @@ namespace FileSystem
 {
 	public class PhysicalFileSystem : IFileSystem
 	{
-		public async Task<bool> FileExists(string path)
+		public Task<bool> FileExists(string path)
 		{
-			return File.Exists(path);
+			return Task.FromResult(File.Exists(path));
 		}
 
 		public async Task WriteFile(string path, Stream contents)
@@ -17,9 +17,9 @@ namespace FileSystem
 				await contents.CopyToAsync(fs);
 		}
 
-		public async Task<Stream> ReadFile(string path)
+		public Task<Stream> ReadFile(string path)
 		{
-			return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+			return Task.FromResult((Stream)new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read));
 		}
 
 		public async Task DeleteFile(string path)
@@ -45,14 +45,14 @@ namespace FileSystem
 			await Task.Yield();
 		}
 
-		public async Task<IEnumerable<string>> ListFiles(string path)
+		public Task<IEnumerable<string>> ListFiles(string path)
 		{
-			return Directory.EnumerateFiles(path);
+			return Task.FromResult(Directory.EnumerateFiles(path));
 		}
 
-		public async Task<IEnumerable<string>> ListDirectories(string path)
+		public Task<IEnumerable<string>> ListDirectories(string path)
 		{
-			return Directory.EnumerateDirectories(path);
+			return Task.FromResult(Directory.EnumerateDirectories(path));
 		}
 
 		public async Task DeleteDirectory(string path)
