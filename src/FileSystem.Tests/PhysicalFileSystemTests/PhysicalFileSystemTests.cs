@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace FileSystem.Tests.PhysicalFileSystemTests
 {
@@ -14,6 +15,11 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			Fs = new PhysicalFileSystem();
 
 			Directory.CreateDirectory(Root);
+		}
+
+		protected Stream StreamFrom(string text)
+		{
+			return new MemoryStream(Encoding.UTF8.GetBytes(text));
 		}
 
 		public virtual void Dispose()
