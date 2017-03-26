@@ -11,8 +11,9 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 		public PhysicalFileSystemTests()
 		{
 			Root = Guid.NewGuid().ToString();
-
 			Fs = new PhysicalFileSystem();
+
+			Directory.CreateDirectory(Root);
 		}
 
 		public virtual void Dispose()
