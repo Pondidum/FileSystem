@@ -12,7 +12,7 @@ namespace FileSystem
 		Task DeleteFile(string path);
 		Task CopyFile(string source, string destination);
 
-		bool DirectoryExists(string path);
+		Task<bool> DirectoryExists(string path);
 		Task CreateDirectory(string path);
 		Task<IEnumerable<string>> ListFiles(string path);
 		Task<IEnumerable<string>> ListDirectories(string path);

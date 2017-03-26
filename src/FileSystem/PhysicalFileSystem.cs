@@ -34,9 +34,9 @@ namespace FileSystem
 			await Task.Yield();
 		}
 
-		public bool DirectoryExists(string path)
+		public Task<bool> DirectoryExists(string path)
 		{
-			return Directory.Exists(path);
+			return Task.FromResult(Directory.Exists(path));
 		}
 
 		public async Task CreateDirectory(string path)
