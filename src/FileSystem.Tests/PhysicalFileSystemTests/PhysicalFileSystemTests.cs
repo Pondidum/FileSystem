@@ -34,7 +34,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			{
 				Directory.Delete(Root, true);
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				Console.WriteLine("Unable to Delete test directory");
 			}
