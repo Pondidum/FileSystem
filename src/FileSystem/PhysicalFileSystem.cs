@@ -57,7 +57,7 @@ namespace FileSystem
 
 		public async Task DeleteDirectory(string path)
 		{
-			Directory.Delete(path);
+			Directory.Delete(path, recursive: true);
 			await Task.Yield();
 		}
 	}
