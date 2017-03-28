@@ -1,11 +1,11 @@
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
 
 namespace FileSystem.Tests.PhysicalFileSystemTests
 {
-	public class ListFilesTests : PhysicalFileSystemTests
+public class ListDirectoriesTests : PhysicalFileSystemTests
 	{
 		[Fact]
 		public void When_listing_a_non_existing_directory()
@@ -20,7 +20,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			var path = Path.Combine(Root, "without_files");
 			Directory.CreateDirectory(path);
 
-			var files = await Fs.ListFiles(path);
+			var files = await Fs.ListDirectories(path);
 
 			files.ShouldBeEmpty();
 		}
@@ -34,14 +34,9 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			File.WriteAllText(Path.Combine(path, "2.txt"), "is");
 			File.WriteAllText(Path.Combine(path, "3.txt"), "this");
 
-			var files = await Fs.ListFiles(path);
+			var files = await Fs.ListDirectories(path);
 
-			files.ShouldBe(new[]
-			{
-				path + "\\1.txt",
-				path + "\\2.txt",
-				path + "\\3.txt"
-			});
+			files.ShouldBeEmpty();
 		}
 
 		[Fact]
@@ -53,9 +48,14 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			Directory.CreateDirectory(Path.Combine(path, "b"));
 			Directory.CreateDirectory(Path.Combine(path, "c"));
 
-			var files = await Fs.ListFiles(path);
+			var files = await Fs.ListDirectories(path);
 
-			files.ShouldBeEmpty();
+			files.ShouldBe(new[]
+			{
+				path + "\\a",
+				path + "\\b",
+				path + "\\c"
+			});
 		}
 
 		[Fact]
@@ -71,13 +71,13 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			File.WriteAllText(Path.Combine(path, "2.txt"), "is");
 			File.WriteAllText(Path.Combine(path, "3.txt"), "this");
 
-			var files = await Fs.ListFiles(path);
+			var files = await Fs.ListDirectories(path);
 
 			files.ShouldBe(new[]
 			{
-				path + "\\1.txt",
-				path + "\\2.txt",
-				path + "\\3.txt"
+				path + "\\a",
+				path + "\\b",
+				path + "\\c"
 			});
 		}
 	}
