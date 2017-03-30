@@ -21,7 +21,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 		{
 			var stream = await Fs.ReadFile(Path.Combine(Root, "existing.txt"));
 
-			StringFrom(stream).ShouldBe(Content);
+			((string)stream.ReadAsString()).ShouldBe(Content);
 		}
 
 		[Fact]

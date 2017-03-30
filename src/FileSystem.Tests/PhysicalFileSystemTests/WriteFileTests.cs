@@ -22,7 +22,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 		{
 			var path = Path.Combine(Root, filename);
 
-			await Fs.WriteFile(path, StreamFrom(content));
+			await Fs.WriteFile(path, content.ToStream());
 
 			File.ReadAllText(path).ShouldBe(content);
 		}
@@ -32,7 +32,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 		{
 			Should.Throw<DirectoryNotFoundException>(async () => await Fs.WriteFile(
 				"sub\\nonexisting.txt",
-				StreamFrom("something")));
+				"something".ToStream()));
 		}
 	}
 }
