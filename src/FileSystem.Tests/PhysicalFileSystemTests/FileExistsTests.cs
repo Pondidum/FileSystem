@@ -5,13 +5,11 @@ using Xunit;
 
 namespace FileSystem.Tests.PhysicalFileSystemTests
 {
-	public class FileExsistsTests : PhysicalFileSystemTests
+	public class FileExistsTests : PhysicalFileSystemTests
 	{
-		public FileExsistsTests()
+		public FileExistsTests()
 		{
-			File
-				.Create(Path.Combine(Root, "exists.json"))
-				.Dispose();
+			WriteFile(Path.Combine(Root, "exists.json"), "").Wait();
 		}
 
 		[Theory]

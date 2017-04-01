@@ -11,9 +11,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 
 		public ReadFileTests()
 		{
-			File.WriteAllText(
-				Path.Combine(Root, "existing.txt"),
-				Content);
+			WriteFile(Path.Combine(Root, "existing.txt"), Content).Wait();
 		}
 
 		[Fact]
@@ -27,8 +25,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 		[Fact]
 		public void When_reading_a_non_existing_file()
 		{
-			Should.Throw<FileNotFoundException>(
-				async () => await Fs.ReadFile(Path.Combine(Root, "non-existing.txt")));
+			Should.Throw<FileNotFoundException>(async () => await Fs.ReadFile(Path.Combine(Root, "non-existing.txt")));
 		}
 	}
 }

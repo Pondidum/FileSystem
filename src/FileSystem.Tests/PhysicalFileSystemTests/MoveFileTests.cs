@@ -10,16 +10,15 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 		private const string Content = "this is a test";
 
 		[Fact]
-		public void When_moveing_a_non_existing_source()
+		public async Task When_moveing_a_non_existing_source()
 		{
 			var source = Path.Combine(Root, "source-non-existing.json");
 			var destination = Path.Combine(Root, "dest-non-existing.json");
 
-			Should.Throw<FileNotFoundException>(
-				async () => await Fs.MoveFile(source, destination));
+			Should.Throw<FileNotFoundException>(async () => await Fs.MoveFile(source, destination));
 
-			File.Exists(source).ShouldBe(false);
-			File.Exists(destination).ShouldBe(false);
+			await FileDoesntExist(source);
+			await FileDoesntExist(destination);
 		}
 
 		[Fact]
@@ -28,27 +27,26 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			var source = Path.Combine(Root, "source-existing.json");
 			var destination = Path.Combine(Root, "dest-non-existing.json");
 
-			File.WriteAllText(source, Content);
+			await Fs.WriteFile(source, async stream => await Content.WriteTo(stream));
 
 			await Fs.MoveFile(source, destination);
 
-			File.Exists(source).ShouldBe(false);
-			File.ReadAllText(destination).ShouldBe(Content);
+			await FileDoesntExist(source);
+			await FileHasContents(destination, Content);
 		}
 
 		[Fact]
-		public void When_moveing_an_existing_source_to_non_existing_directory()
+		public async Task When_moveing_an_existing_source_to_non_existing_directory()
 		{
 			var source = Path.Combine(Root, "source-existing.json");
 			var destination = Path.Combine(Root, "target\\dest-non-existing.json");
 
-			File.WriteAllText(source, Content);
+			await Fs.WriteFile(source, async stream => await Content.WriteTo(stream));
 
-			Should.Throw<DirectoryNotFoundException>(
-				async () => await Fs.MoveFile(source, destination));
+			Should.Throw<DirectoryNotFoundException>(async () => await Fs.MoveFile(source, destination));
 
-			File.Exists(source).ShouldBe(true);
-			File.Exists(destination).ShouldBe(false);
+			await FileExists(source);
+			await FileDoesntExist(destination);
 		}
 
 		[Fact]
@@ -57,12 +55,12 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			var source = Path.Combine(Root, "source-existing.json");
 			var destination = Path.Combine(Root, "dest-existing.json");
 
-			File.WriteAllText(source, Content);
+			await Fs.WriteFile(source, async stream => await Content.WriteTo(stream));
 
 			await Fs.MoveFile(source, destination);
 
-			File.Exists(source).ShouldBe(false);
-			File.ReadAllText(destination).ShouldBe(Content);
+			await FileDoesntExist(source);
+			await FileHasContents(destination, Content);
 		}
 	}
 }

@@ -13,18 +13,18 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			var path = Path.Combine(Root, "non-existing");
 			await Fs.CreateDirectory(path);
 
-			Directory.Exists(path).ShouldBe(true);
+			await DirectoryExists(path);
 		}
 
 		[Fact]
 		public async Task When_creating_an_existing_directory()
 		{
 			var path = Path.Combine(Root, "non-existing");
-			Directory.CreateDirectory(path);
+			await CreateDirectory(path);
 
 			await Fs.CreateDirectory(path);
 
-			Directory.Exists(path).ShouldBe(true);
+			await DirectoryExists(path);
 		}
 
 		[Fact]
@@ -33,7 +33,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			var path = Path.Combine(Root, "non-existing\\tree\\of\\directories");
 			await Fs.CreateDirectory(path);
 
-			Directory.Exists(path).ShouldBe(true);
+			await DirectoryExists(path);
 		}
 	}
 }

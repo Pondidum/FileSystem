@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
+using Shouldly;
 
 namespace FileSystem.Tests.PhysicalFileSystemTests
 {
@@ -13,14 +15,26 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			Root = Guid.NewGuid().ToString();
 			Fs = new PhysicalFileSystem();
 
-			Directory.CreateDirectory(Root);
+			CreateDirectory(Root).Wait();
 		}
+
+		protected async Task FileExists(string path) => (await Fs.FileExists(path)).ShouldBe(true);
+		protected async Task FileDoesntExist(string path) => (await Fs.FileExists(path)).ShouldBe(false);
+		protected async Task FileHasContents(string path, string contents) => (await Fs.ReadFile(path)).ReadAsString().ShouldBe(contents);
+
+		protected async Task DirectoryExists(string path) => (await Fs.DirectoryExists(path)).ShouldBe(true);
+		protected async Task DirectoryDoesntExist(string path) => (await Fs.DirectoryExists(path)).ShouldBe(false);
+
+
+		protected async Task WriteFile(string path, string content) => await Fs.WriteFile(path, async stream => await content.WriteTo(stream));
+		protected async Task CreateDirectory(string path) => await Fs.CreateDirectory(path);
+
 
 		public virtual void Dispose()
 		{
 			try
 			{
-				Directory.Delete(Root, true);
+				Fs.DeleteDirectory(Root);
 			}
 			catch (Exception)
 			{

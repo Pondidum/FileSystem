@@ -9,9 +9,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 	{
 		public DeleteFileTests()
 		{
-			File.WriteAllText(
-				Path.Combine(Root, "existing.txt"),
-				"this is some content");
+			WriteFile(Path.Combine(Root, "existing.txt"), "this is some content").Wait();
 		}
 
 		[Theory]

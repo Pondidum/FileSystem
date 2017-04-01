@@ -10,9 +10,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 	{
 		public WriteFileTests()
 		{
-			File.WriteAllText(
-				Path.Combine(Root, "exists.txt"),
-				"This is a single line test");
+			WriteFile(Path.Combine(Root, "exists.txt"), "This is a single line test").Wait();
 		}
 
 		[Theory]
@@ -24,7 +22,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 
 			await Fs.WriteFile(path, async stream => await content.WriteTo(stream));
 
-			File.ReadAllText(path).ShouldBe(content);
+			await FileHasContents(path, content);
 		}
 
 		[Fact]

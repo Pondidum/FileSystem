@@ -9,7 +9,7 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 	{
 		public DirectoryExistsTests()
 		{
-			Directory.CreateDirectory(Path.Combine(Root, "test-dir"));
+			CreateDirectory(Path.Combine(Root, "test-dir")).Wait();
 		}
 
 		[Theory]

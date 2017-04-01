@@ -11,48 +11,48 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 		public async Task When_deleting_an_existing_directory()
 		{
 			var path = Path.Combine(Root, "existing");
-			Directory.CreateDirectory(path);
+			await CreateDirectory(path);
 
 			await Fs.DeleteDirectory(path);
 
-			Directory.Exists(path).ShouldBe(false);
+			await DirectoryDoesntExist(path);
 		}
 
 		[Fact]
 		public async Task When_deleting_an_existing_directory_with_files()
 		{
 			var path = Path.Combine(Root, "existing");
-			Directory.CreateDirectory(path);
-			File.WriteAllText(Path.Combine(path, "1.txt"), "first");
-			File.WriteAllText(Path.Combine(path, "2.txt"), "second");
+			await CreateDirectory(path);
+			await WriteFile(Path.Combine(path, "1.txt"), "first");
+			await WriteFile(Path.Combine(path, "2.txt"), "second");
 
 			await Fs.DeleteDirectory(path);
 
-			Directory.Exists(path).ShouldBe(false);
+			await DirectoryDoesntExist(path);
 		}
 
 		[Fact]
 		public async Task When_deleting_an_existing_directory_with_subdirectories()
 		{
 			var path = Path.Combine(Root, "existing");
-			Directory.CreateDirectory(path);
-			Directory.CreateDirectory(Path.Combine(path, "1"));
-			Directory.CreateDirectory(Path.Combine(path, "2"));
+			await CreateDirectory(path);
+			await CreateDirectory(Path.Combine(path, "1"));
+			await CreateDirectory(Path.Combine(path, "2"));
 
 			await Fs.DeleteDirectory(path);
 
-			Directory.Exists(path).ShouldBe(false);
+			await DirectoryDoesntExist(path);
 		}
 
 		[Fact]
-		public void When_deleting_a_non_existing_directory()
+		public async Task When_deleting_a_non_existing_directory()
 		{
 			var path = "some fake";
 
 			Should.Throw<DirectoryNotFoundException>(
 				async () => await Fs.DeleteDirectory(path));
 
-			Directory.Exists("some fale").ShouldBe(false);
+			await DirectoryDoesntExist("some fake");
 		}
 	}
 }
