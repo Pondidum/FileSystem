@@ -54,6 +54,12 @@ namespace FileSystem
 				await WriteFile(destination, contents);
 		}
 
+		public async Task MoveFile(string source, string destination)
+		{
+			await CopyFile(source, destination);
+			await DeleteFile(source);
+		}
+
 		public Task<bool> DirectoryExists(string path)
 		{
 			return Task.FromResult(_directories.Contains(path));

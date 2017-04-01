@@ -11,6 +11,7 @@ namespace FileSystem
 		Task<Stream> ReadFile(string path);
 		Task DeleteFile(string path);
 		Task CopyFile(string source, string destination);
+		Task MoveFile(string source, string destination);
 
 		Task<bool> DirectoryExists(string path);
 		Task CreateDirectory(string path);

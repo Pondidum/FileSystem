@@ -22,16 +22,22 @@ namespace FileSystem
 			return Task.FromResult((Stream)new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read));
 		}
 
-		public async Task DeleteFile(string path)
+		public Task DeleteFile(string path)
 		{
 			File.Delete(path);
-			await Task.Yield();
+			return Task.CompletedTask;
 		}
 
-		public async Task CopyFile(string source, string destination)
+		public Task CopyFile(string source, string destination)
 		{
 			File.Copy(source, destination);
-			await Task.Yield();
+			return Task.CompletedTask;
+		}
+
+		public Task MoveFile(string source, string destination)
+		{
+			File.Move(source, destination);
+			return Task.CompletedTask;
 		}
 
 		public Task<bool> DirectoryExists(string path)
@@ -39,10 +45,10 @@ namespace FileSystem
 			return Task.FromResult(Directory.Exists(path));
 		}
 
-		public async Task CreateDirectory(string path)
+		public Task CreateDirectory(string path)
 		{
 			Directory.CreateDirectory(path);
-			await Task.Yield();
+			return Task.CompletedTask;
 		}
 
 		public Task<IEnumerable<string>> ListFiles(string path)
@@ -55,10 +61,10 @@ namespace FileSystem
 			return Task.FromResult(Directory.EnumerateDirectories(path));
 		}
 
-		public async Task DeleteDirectory(string path)
+		public Task DeleteDirectory(string path)
 		{
 			Directory.Delete(path, recursive: true);
-			await Task.Yield();
+			return Task.CompletedTask;
 		}
 	}
 }
