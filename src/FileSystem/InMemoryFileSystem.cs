@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,11 +22,11 @@ namespace FileSystem
 			return Task.FromResult(_files.ContainsKey(path));
 		}
 
-		public async Task WriteFile(string path, Stream contents)
+		public async Task WriteFile(string path, Func<Stream, Task> write)
 		{
 			using (var ms = new MemoryStream())
 			{
-				await contents.CopyToAsync(ms);
+				await write(ms);
 				_files[path] = ms.ToArray();
 			}
 		}
@@ -51,7 +52,7 @@ namespace FileSystem
 		public async Task CopyFile(string source, string destination)
 		{
 			using (var contents = await ReadFile(source))
-				await WriteFile(destination, contents);
+				await WriteFile(destination, async stream => await contents.CopyToAsync(stream));
 		}
 
 		public async Task MoveFile(string source, string destination)

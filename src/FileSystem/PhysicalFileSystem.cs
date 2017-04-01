@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -11,10 +12,10 @@ namespace FileSystem
 			return Task.FromResult(File.Exists(path));
 		}
 
-		public async Task WriteFile(string path, Stream contents)
+		public async Task WriteFile(string path, Func<Stream, Task> write)
 		{
 			using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
-				await contents.CopyToAsync(fs);
+				await write(fs);
 		}
 
 		public Task<Stream> ReadFile(string path)

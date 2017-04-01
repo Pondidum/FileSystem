@@ -35,7 +35,7 @@ namespace FileSystem.Tests
 			await DirectoryExists(dir);
 			await FileDoesntExist(firstFile);
 
-			await _fileSystem.WriteFile(firstFile, Json.ToStream());
+			await _fileSystem.WriteFile(firstFile, async stream => await Json.WriteTo(stream));
 
 			await FileExists(firstFile);
 
@@ -51,7 +51,7 @@ namespace FileSystem.Tests
 			await FileExists(secondFile);
 			await FileHasContents(secondFile, Json);
 
-			await _fileSystem.WriteFile(firstFile, OtherJson.ToStream());
+			await _fileSystem.WriteFile(firstFile, async stream => await OtherJson.WriteTo(stream));
 
 			await FileExists(firstFile);
 			await FileHasContents(firstFile, OtherJson);
