@@ -6,16 +6,16 @@ using Xunit;
 
 namespace FileSystem.Tests.PhysicalFileSystemTests
 {
-	public class PhysicalFileSystemTests : IDisposable
+	public abstract class FileSystemTests : IDisposable
 	{
 		private const string Content = "this is a test";
 		protected string Root { get; }
-		protected PhysicalFileSystem Fs { get; }
+		protected IFileSystem Fs { get; }
 
-		public PhysicalFileSystemTests()
+		public FileSystemTests(IFileSystem fileSystem)
 		{
 			Root = Guid.NewGuid().ToString();
-			Fs = new PhysicalFileSystem();
+			Fs = fileSystem;
 
 			CreateDirectory(Root).Wait();
 		}
