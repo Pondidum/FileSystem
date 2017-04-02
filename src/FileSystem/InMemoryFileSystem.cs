@@ -8,13 +8,30 @@ namespace FileSystem
 {
 	public class InMemoryFileSystem : IFileSystem
 	{
+		private class PathComparer : IEqualityComparer<string>
+		{
+			public bool Equals(string x, string y)
+			{
+				if (x == null || y == null)
+					return false;
+
+				return GetHashCode(x) == GetHashCode(y);
+			}
+
+			public int GetHashCode(string obj)
+			{
+				return StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Replace('/', '\\'));
+			}
+		}
+
 		private readonly Dictionary<string, byte[]> _files;
 		private readonly HashSet<string> _directories;
 
 		public InMemoryFileSystem()
 		{
-			_files = new Dictionary<string, byte[]>();
-			_directories = new HashSet<string>();
+			var comparer = new PathComparer();
+			_files = new Dictionary<string, byte[]>(comparer);
+			_directories = new HashSet<string>(comparer);
 		}
 
 		public Task<bool> FileExists(string path)
@@ -24,6 +41,8 @@ namespace FileSystem
 
 		public async Task WriteFile(string path, Func<Stream, Task> write)
 		{
+			ThrowIfNoDirectory(Path.GetDirectoryName(path));
+
 			using (var ms = new MemoryStream())
 			{
 				await write(ms);
@@ -43,6 +62,8 @@ namespace FileSystem
 
 		public Task DeleteFile(string path)
 		{
+			ThrowIfNoDirectory(Path.GetDirectoryName(path));
+
 			if (_files.ContainsKey(path))
 				_files.Remove(path);
 
@@ -74,6 +95,8 @@ namespace FileSystem
 
 		public Task<IEnumerable<string>> ListFiles(string path)
 		{
+			ThrowIfNoDirectory(Path.GetDirectoryName(path));
+
 			return Task.FromResult(
 				_files.Keys
 				.Where(key => key.StartsWith(path)));
@@ -81,16 +104,25 @@ namespace FileSystem
 
 		public Task<IEnumerable<string>> ListDirectories(string path)
 		{
+			ThrowIfNoDirectory(Path.GetDirectoryName(path));
+
 			return Task.FromResult(
-				_files.Keys
-				.Union(_directories)
-				.Where(key => key.StartsWith(path)));
+				_directories
+				.Where(key => key != path && key.StartsWith(path)));
 		}
 
 		public Task DeleteDirectory(string path)
 		{
+			ThrowIfNoDirectory(path);
+
 			_directories.RemoveWhere(key => key.StartsWith(path));
 			return Task.CompletedTask;
+		}
+
+		private void ThrowIfNoDirectory(string path)
+		{
+			if (_directories.Contains(path) == false)
+				throw new DirectoryNotFoundException($"Unable to find directory '{path}'\n\nKnown Directories:\n{string.Join("\n", _directories)}");
 		}
 	}
 }

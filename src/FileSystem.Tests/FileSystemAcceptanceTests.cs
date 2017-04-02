@@ -24,7 +24,9 @@ namespace FileSystem.Tests
 		[Fact]
 		public async Task When_a_file_is_written()
 		{
-			var dir = Path.Combine(_root, "some//sub//dir");
+			await _fileSystem.CreateDirectory(_root);
+
+			var dir = Path.Combine(_root, "some/sub/dir");
 			var firstFile = Path.Combine(dir, "somefile.json");
 			var secondFile = Path.Combine(dir, "anotherFile.json");
 
