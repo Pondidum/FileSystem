@@ -1,8 +1,12 @@
-﻿namespace FileSystem.Events
+﻿using FileSystem.Internal;
+
+namespace FileSystem.Events
 {
 	public class FileSystemEvent
 	{
 		public string Path { get; set; }
+
+		public override string ToString() => $"{GetType().Name.ToSentence()} '{Path}'";
 	}
 
 	public class FileSystemDestinationEvent : FileSystemEvent
