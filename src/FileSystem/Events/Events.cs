@@ -12,6 +12,8 @@ namespace FileSystem.Events
 	public class FileSystemDestinationEvent : FileSystemEvent
 	{
 		public string Destination { get; set; }
+
+		public override string ToString() => $"{GetType().Name.ToSentence()} from '{Path}' to '{Destination}'";
 	}
 
 	public class FileSystemExistanceEvent : FileSystemEvent
