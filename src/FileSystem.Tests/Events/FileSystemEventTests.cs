@@ -28,5 +28,29 @@ namespace FileSystem.Tests.Events
 
 			fsde.ToString().ShouldBe($"File System Destination Event from '{fsde.Path}' to '{fsde.Destination}'");
 		}
+
+		[Fact]
+		public void When_calling_tostring_on_an_existence_event_non_existing()
+		{
+			var fse = new FileSystemExistenceEvent()
+			{
+				Path = "./some/path/file.json",
+				Exists = false
+			};
+
+			fse.ToString().ShouldBe($"File System Existence Event '{fse.Path}'. It didn't exist");
+		}
+
+		[Fact]
+		public void When_calling_tostring_on_an_existence_event_existing()
+		{
+			var fse = new FileSystemExistenceEvent()
+			{
+				Path = "./some/path/file.json",
+				Exists = true
+			};
+
+			fse.ToString().ShouldBe($"File System Existence Event '{fse.Path}'. It did exist");
+		}
 	}
 }

@@ -23,7 +23,7 @@ namespace FileSystem
 		{
 			var exists = await _inner.FileExists(path);
 
-			await Emit(new FileExistanceChecked { Path = path, Exists = exists });
+			await Emit(new FileExistenceChecked { Path = path, Exists = exists });
 
 			return exists;
 		}
@@ -63,7 +63,7 @@ namespace FileSystem
 		public async Task<bool> DirectoryExists(string path)
 		{
 			var exists = await _inner.DirectoryExists(path);
-			await Emit(new DirectoryExistanceChecked { Path = path, Exists = exists });
+			await Emit(new DirectoryExistenceChecked { Path = path, Exists = exists });
 
 			return exists;
 		}
