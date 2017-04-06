@@ -1,6 +1,4 @@
-using FileSystem.Tests.PhysicalFileSystemTests;
-
-namespace FileSystem.Tests.InMemoryFileSystemTests
+namespace FileSystem.Tests
 {
 	public class InMemoryFileSystemTests : FileSystemTests
 	{

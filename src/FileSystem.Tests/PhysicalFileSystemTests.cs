@@ -1,4 +1,4 @@
-﻿namespace FileSystem.Tests.PhysicalFileSystemTests
+﻿namespace FileSystem.Tests
 {
 	public class PhysicalFileSystemTests : FileSystemTests
 	{

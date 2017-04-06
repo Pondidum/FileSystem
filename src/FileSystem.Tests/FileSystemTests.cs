@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
 
-namespace FileSystem.Tests.PhysicalFileSystemTests
+namespace FileSystem.Tests
 {
 	public abstract class FileSystemTests : IDisposable
 	{
