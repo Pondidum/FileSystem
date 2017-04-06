@@ -8,7 +8,10 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 {
 	public abstract class FileSystemTests : IDisposable
 	{
+		private const string Json = "{ \"message\": \"Hello world!\"}";
+		private const string OtherJson = "[ 'one', 'two', 'three', 'four' ]";
 		private const string Content = "this is a test";
+
 		protected string Root { get; }
 		protected IFileSystem Fs { get; }
 
@@ -42,6 +45,54 @@ namespace FileSystem.Tests.PhysicalFileSystemTests
 			{
 				Console.WriteLine("Unable to Delete test directory");
 			}
+		}
+
+		[Fact]
+		public async Task Acceptance_test()
+		{
+			var root = Path.Combine(Root, "Acceptance");
+
+			await Fs.CreateDirectory(root);
+
+			var dir = Path.Combine(root, "some/sub/dir");
+			var firstFile = Path.Combine(dir, "somefile.json");
+			var secondFile = Path.Combine(dir, "anotherFile.json");
+
+			await DirectoryDoesntExist(dir);
+
+			await Fs.CreateDirectory(dir);
+
+			await DirectoryExists(dir);
+			await FileDoesntExist(firstFile);
+
+			await Fs.WriteFile(firstFile, async stream => await Json.WriteTo(stream));
+
+			await FileExists(firstFile);
+
+			//can read twice
+			await FileHasContents(firstFile, Json);
+			await FileHasContents(firstFile, Json);
+
+			await Fs.CopyFile(firstFile, secondFile);
+
+			await FileExists(firstFile);
+			await FileHasContents(firstFile, Json);
+
+			await FileExists(secondFile);
+			await FileHasContents(secondFile, Json);
+
+			await Fs.WriteFile(firstFile, async stream => await OtherJson.WriteTo(stream));
+
+			await FileExists(firstFile);
+			await FileHasContents(firstFile, OtherJson);
+
+			await FileExists(secondFile);
+			await FileHasContents(secondFile, Json);
+
+			await Fs.DeleteFile(firstFile);
+
+			await FileDoesntExist(firstFile);
+			await FileExists(secondFile);
 		}
 
 		[Fact]
