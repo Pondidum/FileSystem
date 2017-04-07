@@ -50,6 +50,24 @@ namespace FileSystem
 			}
 		}
 
+		public async Task AppendFile(string path, Func<Stream, Task> write)
+		{
+			ThrowIfNoDirectory(Path.GetDirectoryName(path));
+
+			byte[] contents;
+
+			if (_files.TryGetValue(path, out contents) == false)
+				contents = Array.Empty<byte>();
+
+			using (var ms = new MemoryStream())
+			{
+				await ms.WriteAsync(contents, 0, contents.Length);
+				await write(ms);
+
+				_files[path] = ms.ToArray();
+			}
+		}
+
 		public Task<Stream> ReadFile(string path)
 		{
 			byte[] contents;

@@ -32,6 +32,7 @@ namespace FileSystem.Events
 
 	public class FileExistenceChecked : FileSystemExistenceEvent { }
 	public class FileWritten : FileSystemEvent { }
+	public class FileAppended : FileSystemEvent { }
 	public class FileRead : FileSystemEvent { }
 	public class FileDeleted : FileSystemEvent { }
 	public class FileMoved : FileSystemDestinationEvent { }

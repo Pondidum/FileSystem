@@ -504,5 +504,34 @@ namespace FileSystem.Tests
 				"sub\\nonexisting.txt",
 				async stream => await "something".WriteTo(stream)));
 		}
+
+		[Fact]
+		public async Task When_appending_to_an_existing_file()
+		{
+			var path = Path.Combine(Root, "existing.txt");
+			await Fs.WriteFile(path, async stream => await Json.WriteTo(stream));
+
+			await Fs.AppendFile(path, async stream => await OtherJson.WriteTo(stream));
+
+			await FileHasContents(path, Json + OtherJson);
+		}
+
+		[Fact]
+		public async Task When_appending_to_a_non_existing_file()
+		{
+			var path = Path.Combine(Root, "non-existing.txt");
+
+			await Fs.AppendFile(path, async stream => await OtherJson.WriteTo(stream));
+
+			await FileHasContents(path, OtherJson);
+		}
+
+		[Fact]
+		public void When_appending_to_a_non_existing_directory()
+		{
+			Should.Throw<DirectoryNotFoundException>(async () => await Fs.WriteFile(
+				"sub\\nonexisting.txt",
+				async stream => await "something".WriteTo(stream)));
+		}
 	}
 }

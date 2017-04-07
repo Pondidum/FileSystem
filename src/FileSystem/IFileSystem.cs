@@ -9,6 +9,7 @@ namespace FileSystem
 	{
 		Task<bool> FileExists(string path);
 		Task WriteFile(string path, Func<Stream, Task> write);
+		Task AppendFile(string path, Func<Stream, Task> write);
 		Task<Stream> ReadFile(string path);
 		Task DeleteFile(string path);
 		Task CopyFile(string source, string destination);

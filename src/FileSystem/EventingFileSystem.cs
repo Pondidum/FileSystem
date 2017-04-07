@@ -39,6 +39,12 @@ namespace FileSystem
 			await Emit(new FileWritten { Path = path });
 		}
 
+		public async Task AppendFile(string path, Func<Stream, Task> write)
+		{
+			await _inner.AppendFile(path, write);
+			await Emit(new FileAppended { Path = path });
+		}
+
 		public async Task<Stream> ReadFile(string path)
 		{
 			var stream = await _inner.ReadFile(path);

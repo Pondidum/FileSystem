@@ -18,6 +18,12 @@ namespace FileSystem
 				await write(fs);
 		}
 
+		public async Task AppendFile(string path, Func<Stream, Task> write)
+		{
+			using (var fs = new FileStream(path, FileMode.Append, FileAccess.Write))
+				await write(fs);
+		}
+
 		public Task<Stream> ReadFile(string path)
 		{
 			return Task.FromResult((Stream)new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read));
