@@ -1,3 +1,3 @@
 #! /bin/sh
 
-dotnet test src/FileSystem.Tests/FileSystem.Tests.csproj
+(cd ./src/FileSystem.Tests/ && dotnet xunit)
