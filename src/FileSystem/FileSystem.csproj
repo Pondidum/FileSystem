@@ -2,7 +2,7 @@
   <PropertyGroup>
     <PackageId>FileSystem</PackageId>
     <PackageTags>filesystem;abstraction;in-memory;decorator</PackageTags>
-    <PackageVersion>0.0.1</PackageVersion>
+    <PackageVersion>0.1.0</PackageVersion>
     <Title>FileSystem</Title>
     <Description>A FileSystem abstraction, allowing decoration and testing of the physical file system.</Description>
     <Authors>Andy Dote</Authors>
