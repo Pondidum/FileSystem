@@ -9,15 +9,20 @@ namespace FileSystem
 	public class EventingFileSystem : IFileSystem
 	{
 		private readonly IFileSystem _inner;
-		private readonly Func<object, Task> _handleEvent;
+		public Func<object, Task> HandleEvent { get; set; }
+
+		public EventingFileSystem(IFileSystem inner)
+			: this(inner, async @event => await Task.CompletedTask)
+		{
+		}
 
 		public EventingFileSystem(IFileSystem inner, Func<object, Task> handleEvent)
 		{
 			_inner = inner;
-			_handleEvent = handleEvent;
+			HandleEvent = handleEvent;
 		}
 
-		private async Task Emit(object @event) => await _handleEvent(@event);
+		protected virtual async Task Emit(object @event) => await HandleEvent(@event);
 
 		public async Task<bool> FileExists(string path)
 		{
