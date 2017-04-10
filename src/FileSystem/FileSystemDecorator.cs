@@ -39,6 +39,11 @@ namespace FileSystem
 			await _inner.DeleteFile(path);
 		}
 
+		public async Task<FileMetadata> ReadFileMetadata(string path)
+		{
+			return await _inner.ReadFileMetadata(path);
+		}
+
 		public virtual async Task CopyFile(string source, string destination)
 		{
 			await _inner.CopyFile(source, destination);

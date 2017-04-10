@@ -35,6 +35,12 @@ namespace FileSystem.Events
 	public class FileAppended : FileSystemEvent { }
 	public class FileRead : FileSystemEvent { }
 	public class FileDeleted : FileSystemEvent { }
+
+	public class FileMetadataRead : FileSystemEvent
+	{
+		public FileMetadata Metadata { get; set; }
+	}
+
 	public class FileMoved : FileSystemDestinationEvent { }
 	public class FileCopied : FileSystemDestinationEvent { }
 

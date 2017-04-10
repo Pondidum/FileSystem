@@ -24,13 +24,23 @@ namespace FileSystem
 			}
 		}
 
-		private readonly Dictionary<string, byte[]> _files;
+		private class FileData : FileMetadata
+		{
+			public byte[] Content { get; set; }
+
+			public FileData()
+			{
+				Content = Array.Empty<byte>();
+			}
+		}
+
+		private readonly Dictionary<string, FileData> _files;
 		private readonly HashSet<string> _directories;
 
 		public InMemoryFileSystem()
 		{
 			var comparer = new PathComparer();
-			_files = new Dictionary<string, byte[]>(comparer);
+			_files = new Dictionary<string, FileData>(comparer);
 			_directories = new HashSet<string>(comparer);
 		}
 
@@ -46,7 +56,10 @@ namespace FileSystem
 			using (var ms = new MemoryStream())
 			{
 				await write(ms);
-				_files[path] = ms.ToArray();
+				_files[path] = new FileData
+				{
+					Content = ms.ToArray()
+				};
 			}
 		}
 
@@ -54,26 +67,28 @@ namespace FileSystem
 		{
 			ThrowIfNoDirectory(Path.GetDirectoryName(path));
 
-			byte[] contents;
+			FileData file;
 
-			if (_files.TryGetValue(path, out contents) == false)
-				contents = Array.Empty<byte>();
+			if (_files.TryGetValue(path, out file) == false)
+				file = new FileData();
 
 			using (var ms = new MemoryStream())
 			{
-				await ms.WriteAsync(contents, 0, contents.Length);
+				await ms.WriteAsync(file.Content, 0, file.Content.Length);
 				await write(ms);
 
-				_files[path] = ms.ToArray();
+				file.Content = ms.ToArray();
+
+				_files[path] = file;
 			}
 		}
 
 		public Task<Stream> ReadFile(string path)
 		{
-			byte[] contents;
+			FileData file;
 
-			if (_files.TryGetValue(path, out contents))
-				return Task.FromResult((Stream)new MemoryStream(contents));
+			if (_files.TryGetValue(path, out file))
+				return Task.FromResult((Stream)new MemoryStream(file.Content));
 
 			throw new FileNotFoundException("Cannot find file", path);
 		}
@@ -86,6 +101,16 @@ namespace FileSystem
 				_files.Remove(path);
 
 			return Task.CompletedTask;
+		}
+
+		public Task<FileMetadata> ReadFileMetadata(string path)
+		{
+			FileData file;
+
+			if (_files.TryGetValue(path, out file))
+				return Task.FromResult((FileMetadata)file);
+
+			throw new FileNotFoundException("Cannot find file", path);
 		}
 
 		public async Task CopyFile(string source, string destination)

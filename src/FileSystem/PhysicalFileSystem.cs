@@ -35,6 +35,11 @@ namespace FileSystem
 			return Task.CompletedTask;
 		}
 
+		public Task<FileMetadata> ReadFileMetadata(string path)
+		{
+			return Task.FromResult(new FileMetadata());
+		}
+
 		public Task CopyFile(string source, string destination)
 		{
 			File.Copy(source, destination);

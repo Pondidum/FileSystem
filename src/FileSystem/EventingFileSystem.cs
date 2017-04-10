@@ -59,6 +59,14 @@ namespace FileSystem
 			await Emit(new FileDeleted { Path = path });
 		}
 
+		public async Task<FileMetadata> ReadFileMetadata(string path)
+		{
+			var meta = await _inner.ReadFileMetadata(path);
+			await Emit(new FileMetadataRead { Path = path, Metadata = meta });
+
+			return meta;
+		}
+
 		public async Task CopyFile(string source, string destination)
 		{
 			await _inner.CopyFile(source, destination);
