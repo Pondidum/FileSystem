@@ -37,7 +37,13 @@ namespace FileSystem
 
 		public Task<FileMetadata> ReadFileMetadata(string path)
 		{
-			return Task.FromResult(new FileMetadata());
+			return Task.FromResult(new FileMetadata
+			{
+				CreationTime = File.GetCreationTimeUtc(path),
+				ModificationTime = File.GetLastWriteTimeUtc(path),
+				AccessTime = File.GetLastAccessTimeUtc(path),
+				Attributes = File.GetAttributes(path)
+			});
 		}
 
 		public Task CopyFile(string source, string destination)
