@@ -26,11 +26,21 @@ namespace FileSystem
 
 		private class FileData : FileMetadata
 		{
-			public byte[] Content { get; set; }
+			public byte[] Content { get; private set; }
 
 			public FileData()
 			{
 				Content = Array.Empty<byte>();
+				CreationTime = DateTime.Now;
+			}
+
+			public FileData Write(byte[] bytes)
+			{
+				Content = bytes;
+				ModificationTime = DateTime.Now;
+				AccessTime = DateTime.Now;
+
+				return this;
 			}
 		}
 
@@ -56,10 +66,7 @@ namespace FileSystem
 			using (var ms = new MemoryStream())
 			{
 				await write(ms);
-				_files[path] = new FileData
-				{
-					Content = ms.ToArray()
-				};
+				_files[path] = new FileData().Write(ms.ToArray());
 			}
 		}
 
@@ -77,7 +84,7 @@ namespace FileSystem
 				await ms.WriteAsync(file.Content, 0, file.Content.Length);
 				await write(ms);
 
-				file.Content = ms.ToArray();
+				file.Write(ms.ToArray());
 
 				_files[path] = file;
 			}

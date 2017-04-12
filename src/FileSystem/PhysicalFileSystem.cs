@@ -39,9 +39,9 @@ namespace FileSystem
 		{
 			return Task.FromResult(new FileMetadata
 			{
-				CreationTime = File.GetCreationTimeUtc(path),
-				ModificationTime = File.GetLastWriteTimeUtc(path),
-				AccessTime = File.GetLastAccessTimeUtc(path),
+				CreationTime = File.GetCreationTime(path),
+				ModificationTime = File.GetLastWriteTime(path),
+				AccessTime = File.GetLastAccessTime(path),
 				Attributes = File.GetAttributes(path)
 			});
 		}

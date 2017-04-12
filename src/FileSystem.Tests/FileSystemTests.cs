@@ -485,6 +485,31 @@ namespace FileSystem.Tests
 			Should.Throw<FileNotFoundException>(async () => await Fs.ReadFile(Path.Combine(Root, "non-existing.txt")));
 		}
 
+		[Fact]
+		public async Task When_reading_a_non_existing_files_metadata()
+		{
+			await Should.ThrowAsync<FileNotFoundException>(async () => await Fs.ReadFileMetadata(Path.Combine(Root, "non-existing.json")));
+		}
+
+		[Fact]
+		public async Task When_reading_an_existing_files_metadata()
+		{
+			var before = DateTime.Now.AddSeconds(-1);
+			var path = Path.Combine(Root, "some-file-meta.json");
+
+			await WriteFile(path, Content);
+
+			var after = DateTime.Now.AddSeconds(1);
+
+			var meta = await Fs.ReadFileMetadata(path);
+
+			meta.ShouldSatisfyAllConditions(
+				() => meta.CreationTime.ShouldBeInRange(before, after),
+				() => meta.ModificationTime.ShouldBeInRange(before, after),
+				() => meta.AccessTime.ShouldBeInRange(before, after)
+			);
+		}
+
 		[Theory]
 		[InlineData("exists.txt", "replacement text")]
 		[InlineData("nonexisting.txt", "other text")]
