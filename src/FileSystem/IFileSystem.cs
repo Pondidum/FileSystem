@@ -14,6 +14,7 @@ namespace FileSystem
 		Task DeleteFile(string path);
 
 		Task<FileMetadata> ReadFileMetadata(string path);
+		Task WriteFileMetadata(string path, FileMetadata metadata);
 
 		Task CopyFile(string source, string destination);
 		Task MoveFile(string source, string destination);

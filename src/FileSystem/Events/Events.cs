@@ -30,16 +30,19 @@ namespace FileSystem.Events
 		}
 	}
 
+	public class FileMetadataEvent : FileSystemEvent
+	{
+		public FileMetadata Metadata { get; set; }
+	}
+
 	public class FileExistenceChecked : FileSystemExistenceEvent { }
 	public class FileWritten : FileSystemEvent { }
 	public class FileAppended : FileSystemEvent { }
 	public class FileRead : FileSystemEvent { }
 	public class FileDeleted : FileSystemEvent { }
 
-	public class FileMetadataRead : FileSystemEvent
-	{
-		public FileMetadata Metadata { get; set; }
-	}
+	public class FileMetadataRead : FileMetadataEvent { }
+	public class FileMetadataWritten : FileMetadataEvent { }
 
 	public class FileMoved : FileSystemDestinationEvent { }
 	public class FileCopied : FileSystemDestinationEvent { }

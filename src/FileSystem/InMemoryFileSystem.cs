@@ -120,6 +120,21 @@ namespace FileSystem
 			throw new FileNotFoundException("Cannot find file", path);
 		}
 
+		public Task WriteFileMetadata(string path, FileMetadata metadata)
+		{
+			FileData file;
+
+			if (_files.TryGetValue(path, out file) == false)
+				throw new FileNotFoundException("Cannot find file", path);
+
+			file.AccessTime = metadata.AccessTime;
+			file.CreationTime = metadata.CreationTime;
+			file.ModificationTime = metadata.ModificationTime;
+			file.Attributes = metadata.Attributes;
+
+			return Task.CompletedTask;
+		}
+
 		public async Task CopyFile(string source, string destination)
 		{
 			using (var contents = await ReadFile(source))

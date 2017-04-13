@@ -44,6 +44,11 @@ namespace FileSystem
 			return await _inner.ReadFileMetadata(path);
 		}
 
+		public async Task WriteFileMetadata(string path, FileMetadata metadata)
+		{
+			await _inner.WriteFileMetadata(path, metadata);
+		}
+
 		public virtual async Task CopyFile(string source, string destination)
 		{
 			await _inner.CopyFile(source, destination);

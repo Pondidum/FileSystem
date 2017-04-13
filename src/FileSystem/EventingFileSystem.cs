@@ -67,6 +67,12 @@ namespace FileSystem
 			return meta;
 		}
 
+		public async Task WriteFileMetadata(string path, FileMetadata metadata)
+		{
+			await _inner.WriteFileMetadata(path, metadata);
+			await Emit(new FileMetadataWritten { Path = path, Metadata = metadata });
+		}
+
 		public async Task CopyFile(string source, string destination)
 		{
 			await _inner.CopyFile(source, destination);

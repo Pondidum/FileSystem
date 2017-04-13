@@ -46,6 +46,16 @@ namespace FileSystem
 			});
 		}
 
+		public Task WriteFileMetadata(string path, FileMetadata metadata)
+		{
+			File.SetLastAccessTime(path, metadata.AccessTime);
+			File.SetCreationTime(path, metadata.CreationTime);
+			File.SetLastWriteTime(path, metadata.ModificationTime);
+			File.SetAttributes(path, metadata.Attributes);
+
+			return Task.CompletedTask;
+		}
+
 		public Task CopyFile(string source, string destination)
 		{
 			File.Copy(source, destination);
