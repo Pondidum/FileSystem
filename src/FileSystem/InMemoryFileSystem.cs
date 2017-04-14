@@ -107,7 +107,7 @@ namespace FileSystem
 			if (_files.ContainsKey(path))
 				_files.Remove(path);
 
-			return Task.CompletedTask;
+			return Task.FromResult(true);
 		}
 
 		public Task<FileMetadata> ReadFileMetadata(string path)
@@ -132,7 +132,7 @@ namespace FileSystem
 			file.ModificationTime = metadata.ModificationTime;
 			file.Attributes = metadata.Attributes;
 
-			return Task.CompletedTask;
+			return Task.FromResult(true);
 		}
 
 		public async Task CopyFile(string source, string destination)
@@ -155,7 +155,7 @@ namespace FileSystem
 		public Task CreateDirectory(string path)
 		{
 			_directories.Add(path);
-			return Task.CompletedTask;
+			return Task.FromResult(true);
 		}
 
 		public Task<IEnumerable<string>> ListFiles(string path)
@@ -181,7 +181,7 @@ namespace FileSystem
 			ThrowIfNoDirectory(path);
 
 			_directories.RemoveWhere(key => key.StartsWith(path));
-			return Task.CompletedTask;
+			return Task.FromResult(true);
 		}
 
 		private void ThrowIfNoDirectory(string path)
