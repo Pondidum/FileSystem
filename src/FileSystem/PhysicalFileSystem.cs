@@ -29,10 +29,9 @@ namespace FileSystem
 			return Task.FromResult((Stream)new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read));
 		}
 
-		public Task DeleteFile(string path)
+		public async Task DeleteFile(string path)
 		{
-			File.Delete(path);
-			return Task.CompletedTask;
+			await Task.Run(() => File.Delete(path));
 		}
 
 		public Task<FileMetadata> ReadFileMetadata(string path)
@@ -46,26 +45,26 @@ namespace FileSystem
 			});
 		}
 
-		public Task WriteFileMetadata(string path, FileMetadata metadata)
+		public async Task WriteFileMetadata(string path, FileMetadata metadata)
 		{
-			File.SetLastAccessTime(path, metadata.AccessTime);
-			File.SetCreationTime(path, metadata.CreationTime);
-			File.SetLastWriteTime(path, metadata.ModificationTime);
-			File.SetAttributes(path, metadata.Attributes);
+			await Task.Run(() =>
+			{
 
-			return Task.CompletedTask;
+				File.SetLastAccessTime(path, metadata.AccessTime);
+				File.SetCreationTime(path, metadata.CreationTime);
+				File.SetLastWriteTime(path, metadata.ModificationTime);
+				File.SetAttributes(path, metadata.Attributes);
+			});
 		}
 
-		public Task CopyFile(string source, string destination)
+		public async Task CopyFile(string source, string destination)
 		{
-			File.Copy(source, destination);
-			return Task.CompletedTask;
+			await Task.Run(() => File.Copy(source, destination));
 		}
 
-		public Task MoveFile(string source, string destination)
+		public async Task MoveFile(string source, string destination)
 		{
-			File.Move(source, destination);
-			return Task.CompletedTask;
+			await Task.Run(() => File.Move(source, destination));
 		}
 
 		public Task<bool> DirectoryExists(string path)
@@ -73,10 +72,9 @@ namespace FileSystem
 			return Task.FromResult(Directory.Exists(path));
 		}
 
-		public Task CreateDirectory(string path)
+		public async Task CreateDirectory(string path)
 		{
-			Directory.CreateDirectory(path);
-			return Task.CompletedTask;
+			await Task.Run(() => Directory.CreateDirectory(path));
 		}
 
 		public Task<IEnumerable<string>> ListFiles(string path)
@@ -89,10 +87,9 @@ namespace FileSystem
 			return Task.FromResult(Directory.EnumerateDirectories(path));
 		}
 
-		public Task DeleteDirectory(string path)
+		public async Task DeleteDirectory(string path)
 		{
-			Directory.Delete(path, recursive: true);
-			return Task.CompletedTask;
+			await Task.Run(() => Directory.Delete(path, recursive: true));
 		}
 	}
 }
