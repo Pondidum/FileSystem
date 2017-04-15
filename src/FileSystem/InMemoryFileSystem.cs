@@ -30,7 +30,7 @@ namespace FileSystem
 
 			public FileData()
 			{
-				Content = Array.Empty<byte>();
+				Content = new byte[0];
 				CreationTime = DateTime.Now;
 			}
 
