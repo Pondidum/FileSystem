@@ -18,10 +18,10 @@ namespace FileSystem.Tests
 		{
 			_events = new List<object>();
 
-			fs.HandleEvent = async @event =>
+			fs.HandleEvent = @event =>
 			{
 				_events.Add(@event);
-				await Task.CompletedTask;
+				return Task.FromResult(true);
 			};
 		}
 

@@ -12,7 +12,7 @@ namespace FileSystem
 		public Func<object, Task> HandleEvent { get; set; }
 
 		public EventingFileSystem(IFileSystem inner)
-			: this(inner, async @event => await Task.CompletedTask)
+			: this(inner, @event => Task.FromResult(true))
 		{
 		}
 
