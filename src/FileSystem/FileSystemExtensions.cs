@@ -8,16 +8,17 @@ namespace FileSystem
 	{
 		public static async Task<IEnumerable<string>> ReadFileLines(this IFileSystem fileSystem, string path)
 		{
-			using (var stream = await fileSystem.ReadFile(path))
+			return ReadLines(await fileSystem.ReadFile(path));
+		}
+
+		private static IEnumerable<string> ReadLines(Stream stream)
+		{
+			using (stream)
 			using (var sr = new StreamReader(stream))
 			{
-				var lines = new List<string>();
-
 				string line = null;
 				while ((line = sr.ReadLine()) != null)
-					lines.Add(line);
-
-				return lines;
+					yield return line;
 			}
 		}
 	}
