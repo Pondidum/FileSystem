@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FileSystem
@@ -20,6 +22,19 @@ namespace FileSystem
 				while ((line = sr.ReadLine()) != null)
 					yield return line;
 			}
+		}
+
+		public static async Task AppendFileLines(this IFileSystem fileSystem, string path, params string[] lines)
+		{
+			if (lines == null || lines.Any() == false)
+				return;
+
+			await fileSystem.AppendFile(path, async stream =>
+			{
+				using (var sw = new StreamWriter(stream))
+					foreach (var line in lines)
+						await sw.WriteLineAsync(line);
+			});
 		}
 	}
 }
