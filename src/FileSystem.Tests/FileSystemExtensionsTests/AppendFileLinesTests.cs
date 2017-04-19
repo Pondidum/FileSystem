@@ -11,28 +11,24 @@ namespace FileSystem.Tests.FileSystemExtensionsTests
 	public class AppendFileLinesTests
 	{
 		private readonly IFileSystem _fileSystem;
-		private string _content;
+		private readonly StreamCapture _stream;
 
 		public AppendFileLinesTests()
 		{
-			_fileSystem = Substitute.For<IFileSystem>();
+			_stream = new StreamCapture();
 
-			_fileSystem.AppendFile(Arg.Any<string>(), Arg.Do<Func<Stream, Task>>(async func =>
-			{
-				using (var ms = new MemoryStream())
-				{
-					await func(ms);
-				    _content = Encoding.UTF8.GetString(ms.ToArray());
-				}
-			}));
+			_fileSystem = Substitute.For<IFileSystem>();
+			_fileSystem.AppendFile(Arg.Any<string>(), Arg.Do<Func<Stream, Task>>(_stream.Capture));
 		}
+
+		private string Content => Encoding.UTF8.GetString(_stream.Last.ToArray());
 
 		[Fact]
 		public void Please_work()
 		{
 			_fileSystem.AppendFile("wat", async stream => await "text".WriteTo(stream));
 
-			_content.ShouldBe("text");
+			Content.ShouldBe("text");
 		}
 
 		[Fact]
@@ -48,7 +44,7 @@ namespace FileSystem.Tests.FileSystemExtensionsTests
 		{
 			await _fileSystem.AppendFileLines("wat.json", "a line");
 
-			_content.ShouldBe("a line" + Environment.NewLine);
+			Content.ShouldBe("a line" + Environment.NewLine);
 		}
 
 		[Fact]
@@ -56,7 +52,7 @@ namespace FileSystem.Tests.FileSystemExtensionsTests
 		{
 			await _fileSystem.AppendFileLines("wat.json", "One", "Two", "Three");
 
-			_content.ShouldBe($"One{Environment.NewLine}Two{Environment.NewLine}Three{Environment.NewLine}");
+			Content.ShouldBe($"One{Environment.NewLine}Two{Environment.NewLine}Three{Environment.NewLine}");
 		}
 	}
 }
