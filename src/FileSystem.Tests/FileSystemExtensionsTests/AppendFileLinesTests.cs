@@ -36,7 +36,7 @@ namespace FileSystem.Tests.FileSystemExtensionsTests
 		{
 			await _fileSystem.AppendFileLines("wat.json");
 
-			_fileSystem.DidNotReceive().AppendFile(Arg.Any<string>(), Arg.Any<Func<Stream, Task>>());
+			await _fileSystem.DidNotReceive().AppendFile(Arg.Any<string>(), Arg.Any<Func<Stream, Task>>());
 		}
 
 		[Fact]
