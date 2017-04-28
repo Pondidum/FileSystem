@@ -160,7 +160,7 @@ namespace FileSystem
 
 		public Task<IEnumerable<string>> ListFiles(string path)
 		{
-			ThrowIfNoDirectory(Path.GetDirectoryName(path));
+			ThrowIfNoDirectory(path);
 
 			return Task.FromResult(
 				_files.Keys
@@ -169,7 +169,7 @@ namespace FileSystem
 
 		public Task<IEnumerable<string>> ListDirectories(string path)
 		{
-			ThrowIfNoDirectory(Path.GetDirectoryName(path));
+			ThrowIfNoDirectory(path);
 
 			return Task.FromResult(
 				_directories
@@ -186,6 +186,9 @@ namespace FileSystem
 
 		private void ThrowIfNoDirectory(string path)
 		{
+		    if (string.IsNullOrWhiteSpace(path))
+		        return;
+
 			if (_directories.Contains(path) == false)
 				throw new DirectoryNotFoundException($"Unable to find directory '{path}'\n\nKnown Directories:\n{string.Join("\n", _directories)}");
 		}
