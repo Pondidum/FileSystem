@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>FileSystem</PackageId>
-    <PackageTags>filesystem;abstraction;in-memory;decorator</PackageTags>
+    <PackageTags>filesystem;abstraction;in-memory;decorator,async</PackageTags>
     <PackageVersion>0.2.2</PackageVersion>
     <Title>FileSystem</Title>
     <Description>A FileSystem abstraction, allowing decoration and testing of the physical file system.</Description>
