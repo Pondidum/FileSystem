@@ -510,6 +510,46 @@ namespace FileSystem.Tests
 			);
 		}
 
+		[Fact]
+		public async Task When_writing_a_non_existing_files_metadata()
+		{
+			var meta = new FileMetadata
+			{
+				AccessTime = DateTime.Now.AddSeconds(-10),
+				ModificationTime = DateTime.Now.AddSeconds(-20),
+				CreationTime = DateTime.Now.AddSeconds(-30),
+				Attributes = FileAttributes.Hidden
+			};
+
+			await Should.ThrowAsync<FileNotFoundException>(async () => await Fs.WriteFileMetadata(Path.Combine(Root, "non-exsting-file.json"), meta));
+		}
+
+		[Fact]
+		public async Task When_writing_an_existing_files_metadata()
+		{
+			var path = Path.Combine(Root, "some-file-meta.js");
+			await WriteFile(path, Content);
+
+			var meta = new FileMetadata
+			{
+				AccessTime = DateTime.Now.AddSeconds(-10),
+				ModificationTime = DateTime.Now.AddSeconds(-20),
+				CreationTime = DateTime.Now.AddSeconds(-30),
+				Attributes = FileAttributes.Hidden
+			};
+
+			await Fs.WriteFileMetadata(path, meta);
+
+			var readMeta = await Fs.ReadFileMetadata(path);
+
+			readMeta.ShouldSatisfyAllConditions(
+				() => readMeta.Attributes.ShouldBe(meta.Attributes),
+				() => readMeta.AccessTime.ShouldBe(meta.AccessTime, TimeSpan.FromSeconds(2)),
+				() => readMeta.ModificationTime.ShouldBe(meta.ModificationTime, TimeSpan.FromSeconds(2)),
+				() => readMeta.CreationTime.ShouldBe(meta.CreationTime, TimeSpan.FromSeconds(2))
+			);
+		}
+
 		[Theory]
 		[InlineData("exists.txt", "replacement text")]
 		[InlineData("nonexisting.txt", "other text")]
