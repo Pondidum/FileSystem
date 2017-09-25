@@ -102,6 +102,53 @@ public class EncryptingFileSystem : FileSystemDecorator
 }
 ```
 
+# Testing
+
+The easiest way of testing code using an `IFileSystem` dependency is to use the `InMemoryFileSystem`, which will behave the same as the physical file system.
+
+```csharp
+var fileSystem = new InMemoryFileSystem();
+
+var sut = new TestClass(fileSystem);
+sut.Execute();
+
+fileSystem
+    .ReadLines("./the/file.txt")
+    .ShouldBe(new[] { "first", "second", "third" });
+```
+
+Alternatly, if you want to assert on something written to a stream, e.g. on a `.AppendFile()` call, you can do it manually (this example using NSubstitute):
+
+```csharp
+var ms = new MemoryStream();
+var fileSystem = Substitute.For<IFileSystem>();
+fileSystem
+    .AppendFile("wat", Arg.Do<Func<Stream, Task>>(func => func(ms).Wait()))
+    .Returns(Task.CompletedTask);
+
+fileSystem.AppendFile("wat", async stream => {
+    await stream.WriteAsync(new byte[] { 1, 2, 3 }, 0, 3);
+});
+
+ms.ToArray().ShouldBe(new byte[] { 1, 2, 3});
+```
+
+Or if you want to capture many streams, you can use the provided `StreamCapture` class:
+
+```csharp
+var streams = new StreamCapture();
+var fileSystem = Substitute.For<IFileSystem>();
+fileSystem
+    .AppendFile("wat", Arg.Do<Func<Stream, Task>>(streams.Capture))
+    .Returns(Task.CompletedTask);
+
+fileSystem.AppendFile("wat", async stream => {
+    await stream.WriteAsync(new byte[] { 1, 2, 3 }, 0, 3);
+});
+
+streams.Last.ToArray().ShouldBe(new byte[] { 1, 2, 3});
+```
+
 # To do
 
 * Caching FileSystem
