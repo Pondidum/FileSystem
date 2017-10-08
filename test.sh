@@ -1,3 +1,3 @@
 #! /bin/sh
 
-(cd ./src/FileSystem.Tests/ && dotnet xunit)
+find ./src -iname "*.Tests.csproj" -type f -exec dotnet test "{}" \;
