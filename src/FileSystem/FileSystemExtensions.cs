@@ -8,6 +8,13 @@ namespace FileSystem
 {
 	public static class FileSystemExtensions
 	{
+		public static async Task<string> ReadFileText(this IFileSystem fileSystem, string path)
+		{
+			using (var stream = await fileSystem.ReadFile(path))
+			using (var reader = new StreamReader(stream))
+				return await reader.ReadToEndAsync();
+		}
+
 		public static async Task<IEnumerable<string>> ReadFileLines(this IFileSystem fileSystem, string path)
 		{
 			return ReadLines(await fileSystem.ReadFile(path));
