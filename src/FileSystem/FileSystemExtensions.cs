@@ -36,5 +36,14 @@ namespace FileSystem
 						await sw.WriteLineAsync(line);
 			});
 		}
+
+		public static async Task WriteFileText(this IFileSystem fileSystem, string path, string content)
+		{
+			await fileSystem.WriteFile(path, async stream =>
+			{
+				using (var sw = new StreamWriter(stream))
+					await sw.WriteAsync(content);
+			});
+		}
 	}
 }

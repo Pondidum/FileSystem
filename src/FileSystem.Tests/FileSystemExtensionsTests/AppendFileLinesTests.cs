@@ -24,14 +24,6 @@ namespace FileSystem.Tests.FileSystemExtensionsTests
 		private string Content => Encoding.UTF8.GetString(_stream.Last.ToArray());
 
 		[Fact]
-		public void Please_work()
-		{
-			_fileSystem.AppendFile("wat", async stream => await "text".WriteTo(stream));
-
-			Content.ShouldBe("text");
-		}
-
-		[Fact]
 		public async Task When_writing_no_lines_to_a_file()
 		{
 			await _fileSystem.AppendFileLines("wat.json");
