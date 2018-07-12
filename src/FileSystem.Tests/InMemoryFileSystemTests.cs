@@ -19,5 +19,18 @@ namespace FileSystem.Tests
 
 			content.ShouldBe("Some Content");
 		}
+
+		[Fact]
+		public async Task Deleting_a_directory_deletes_files()
+		{
+			var filepath = "test/child/history.json";
+
+			await Fs.CreateDirectory("test/child");
+			await Fs.AppendFile(filepath, async stream => await "Some Content".WriteTo(stream));
+
+			await Fs.DeleteDirectory("test/child");
+
+			(await Fs.FileExists(filepath)).ShouldBeFalse();
+		}
 	}
 }

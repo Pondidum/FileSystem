@@ -181,6 +181,11 @@ namespace FileSystem
 			ThrowIfNoDirectory(path);
 
 			_directories.RemoveWhere(key => key.StartsWith(path));
+
+			var toRemove = _files.Keys.Where(f => f.StartsWith(path)).ToArray();
+			foreach (var file in toRemove)
+				_files.Remove(file);
+
 			return Task.FromResult(true);
 		}
 
