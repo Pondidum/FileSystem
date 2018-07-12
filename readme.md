@@ -1,5 +1,8 @@
 # FileSystem
-An asnyc FileSystem abstraction, with decoration and in-memory/virtual support.
+An async FileSystem abstraction, with decoration and in-memory/virtual support.
+
+[![Build status](https://ci.appveyor.com/api/projects/status/3fpoa124cnxdpcp0?svg=true)](https://ci.appveyor.com/project/Pondidum/filesystem)
+[![NuGet](https://img.shields.io/nuget/v/Filesystem.svg)](https://www.nuget.org/packages/FileSystem/)
 
 
 # Installation
@@ -61,7 +64,7 @@ public class LoggingFileSystem : EventingFileSystem
 }
 ```
 
-Each event emitted by the `EventingFileSystem` has a reasonable `.ToString` implementaiton, so you can just write `Console.WriteLine(message.ToString())` if you wish.
+Each event emitted by the `EventingFileSystem` has a reasonable `.ToString` implementation, so you can just write `Console.WriteLine(message.ToString())` if you wish.
 
 # Decoration
 
