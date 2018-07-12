@@ -6,16 +6,16 @@ using Xunit;
 
 namespace FileSystem.Tests
 {
-	public abstract class FileSystemTests : IDisposable
+	public abstract class FileSystemTests<TFileSystem> : IDisposable where TFileSystem : IFileSystem
 	{
 		private const string Json = "{ \"message\": \"Hello world!\"}";
 		private const string OtherJson = "[ 'one', 'two', 'three', 'four' ]";
 		private const string Content = "this is a test";
 
 		protected string Root { get; }
-		protected IFileSystem Fs { get; }
+		protected TFileSystem Fs { get; }
 
-		public FileSystemTests(IFileSystem fileSystem)
+		public FileSystemTests(TFileSystem fileSystem)
 		{
 			Root = Guid.NewGuid().ToString();
 			Fs = fileSystem;

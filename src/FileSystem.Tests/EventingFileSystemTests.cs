@@ -4,7 +4,7 @@ using Shouldly;
 
 namespace FileSystem.Tests
 {
-	public class EventingFileSystemTests : FileSystemTests
+	public class EventingFileSystemTests : FileSystemTests<EventingFileSystem>
 	{
 		private readonly List<object> _events;
 
