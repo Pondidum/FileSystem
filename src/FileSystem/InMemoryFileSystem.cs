@@ -54,6 +54,12 @@ namespace FileSystem
 			_directories = new HashSet<string>(comparer);
 		}
 
+		public void Reset()
+		{
+			_directories.Clear();
+			_files.Clear();
+		}
+
 		public Task<bool> FileExists(string path)
 		{
 			return Task.FromResult(_files.ContainsKey(path));

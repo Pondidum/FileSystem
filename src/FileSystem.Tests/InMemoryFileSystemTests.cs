@@ -33,5 +33,20 @@ namespace FileSystem.Tests
 
 			(await Fs.FileExists(filepath)).ShouldBeFalse();
 		}
+
+		[Fact]
+		public async Task Resetting_the_filesystem_removes_all_files_and_directories()
+		{
+			var dirpath = "test/child";
+			var filepath = Path.Combine(dirpath, "history.json");
+
+			await Fs.CreateDirectory(dirpath);
+			await Fs.AppendFile(filepath, async stream => await "Some Content".WriteTo(stream));
+
+			Fs.Reset();
+
+			(await Fs.DirectoryExists(dirpath)).ShouldBeFalse();
+			(await Fs.FileExists(filepath)).ShouldBeFalse();
+		}
 	}
 }
