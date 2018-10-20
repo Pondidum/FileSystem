@@ -1,14 +1,21 @@
 #! /bin/sh
 
-# First parameter is build mode, defaults to Debug
-MODE=${1:-Debug}
+set -e  # stop on errors
 
-# Find the solution file in the root take it's name
-NAME=$(basename $(ls *.sln | head -n 1) .sln)
+MODE=${1:-Debug}  # First parameter is build mode, defaults to Debug
+NAME=$(basename $(ls *.sln | head -n 1) .sln) # Find the solution file
 
-dotnet restore
-dotnet build --configuration $MODE
+dotnet build \
+  --configuration $MODE
 
-find ./src -iname "*.Tests.csproj" -type f -exec dotnet test "{}" --configuration $MODE \;
+# appveyor has find pointing to /c/windows/system32/find for some reason
+/usr/bin/find ./src -iname "*.Tests.csproj" | xargs -L1 dotnet test \
+  --no-restore \
+  --no-build \
+  --configuration $MODE
 
-dotnet pack ./src/$NAME --configuration $MODE --output ../../.build
+dotnet pack \
+  --no-restore \
+  --no-build \
+  --configuration $MODE \
+  --output ../../.build
